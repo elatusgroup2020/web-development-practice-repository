@@ -1,2 +1,2 @@
-# elatuswebsitereboot
-reboot development of elatus official website
+# web-development-practice-repository
+repository for web development practice
