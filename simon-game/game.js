@@ -1,3 +1,7 @@
+if($(window).width() <= 750) {
+	$("h1").text("Click Any Key to Start");
+}
+
 var randomNumber;
 var buttonColors = ["red", "blue", "green", "yellow"];
 var randomChosenColor;
@@ -31,7 +35,11 @@ function animatePress(currentColor) {
 }
 
 function gameOver() {
-	$("h1").text("Game Over, Press Any Key to Restart");
+	if($(window).width() > 750) {
+		$("h1").text("Game Over, Press Any Key to Restart");
+	} else {
+		$("h1").text("Game Over, Click Any Key to Restart");
+	}
 	playSound("wrong");
 	$("body").addClass("game-over");
 	setTimeout(function () {
@@ -70,7 +78,14 @@ $(".btn").on("click",function(){
 });
 
 $(document).on("keypress",function(){
-	if(gameStart === false) {
+	if($(window).width() > 750 && gameStart === false) {
+		gameStart = true;
+		nextSequence();
+	}
+});
+
+$(document).on("click",function(){
+	if($(window).width() <= 750 && gameStart === false) {
 		gameStart = true;
 		nextSequence();
 	}
