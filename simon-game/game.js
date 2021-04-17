@@ -1,6 +1,4 @@
-alert($(window).width() + " X " + $(window).height());
-
-if($(window).width() <= 750) {
+if($(window).width() <= 1000) {
 	$("h1").text("Click Any Key to Start");
 }
 
@@ -37,7 +35,7 @@ function animatePress(currentColor) {
 }
 
 function gameOver() {
-	if($(window).width() > 750) {
+	if($(window).width() > 1000) {
 		$("h1").text("Game Over, Press Any Key to Restart");
 	} else {
 		$("h1").text("Game Over, Click Any Key to Restart");
@@ -80,14 +78,14 @@ $(".btn").on("click",function(){
 });
 
 $(document).on("keypress",function(){
-	if($(window).width() > 750 && gameStart === false) {
+	if($(window).width() > 1000 && gameStart === false) {
 		gameStart = true;
 		nextSequence();
 	}
 });
 
 $(document).on("click",function(){
-	if($(window).width() <= 750 && gameStart === false) {
+	if($(window).width() <= 1000 && gameStart === false) {
 		gameStart = true;
 		nextSequence();
 	}
