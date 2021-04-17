@@ -1,3 +1,5 @@
+alert($(window).width() + " X " + $(window).height());
+
 if($(window).width() <= 750) {
 	$("h1").text("Click Any Key to Start");
 }
