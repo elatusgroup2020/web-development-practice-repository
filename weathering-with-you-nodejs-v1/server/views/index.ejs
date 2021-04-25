@@ -1,0 +1,36 @@
+<%- include("partials/head"); -%>
+		<section id="hero">
+			<div class="hero-container">
+				<h1>Weathering With You</h1>
+				<h2>Name the place you want to get information now!</h2>
+				<div class="php-email-form">
+					<div class="row no-gutters">
+						<div class="col-md-6 form-group pr-md-1">
+							<input type="text" name="place" class="form-control" id="name" placeholder="e.g. Cebu City" required>
+						</div>
+					</div>
+					<div class="text-center"><button type="submit" class="temp">Check The Weather</button></div>
+				</div>
+				<div id="result">
+					<img id="loading-result" src="images/loading.gif">
+					<div id="result-success">
+						<h1> - </h1>
+						<img src="">
+						<p id="description"> - </p> 
+						<div class="left-div">
+							<p>max-temp : <span id="max-temp">-</span>&deg;C</p>
+							<p>min-temp : <span id="min-temp">-</span>&deg;C</p>
+						</div>
+						<div class="right-div">
+							<p>sunrise : <span id="sunrise">-</span>AM</p>
+							<p>sunset&nbsp; : <span id="sunset">-</span>PM</p>
+						</div>
+					</div>
+					<div id="result-failed">
+						<h1> Cannot Find Place </h1>
+						<img src="images/oops.png">
+					</div>
+				</div>
+			</div>
+		</section>
+<%- include("partials/foot"); -%>

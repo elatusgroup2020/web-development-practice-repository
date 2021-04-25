@@ -1,0 +1,34 @@
+<%- include("partials/head"); -%>
+		<section id="hero">
+			<div class="hero-container">
+				<h1>Weathering With You</h1>
+				<h2>Name the place you want to get information now!</h2>
+				<div class="php-email-form">
+					<div class="row no-gutters">
+						<div class="col-md-6 form-group pr-md-1">
+							<form action="/" method="POST">
+								<input type="text" name="place" class="form-control" id="name" placeholder="e.g. Cebu City" required>
+							</form>
+						</div>
+					</div>
+					<div class="text-center"><button type="submit" class="temp">Check The Weather</button></div>
+				</div>
+				<div id="result">
+					<img id="loading-result" src="images/loading.gif">
+					<div id="result-success">
+						<h1> <%= place; -%> </h1>
+						<img src=" <%= img; -%> ">
+						<p id="description"> <%= description; -%> </p> 
+						<div class="left-div">
+							<p>max-temp : <span id="max-temp"> <%= maxTemp; -%> </span>&deg;C</p>
+							<p>min-temp : <span id="min-temp"> <%= minTemp; -%> </span>&deg;C</p>
+						</div>
+						<div class="right-div">
+							<p>sunrise : <span id="sunrise"> <%= sunrise; -%> </span>AM</p>
+							<p>sunset&nbsp; : <span id="sunset"> <%= sunset; -%> </span>PM</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+<%- include("partials/foot"); -%>
