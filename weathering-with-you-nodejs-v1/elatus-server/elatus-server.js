@@ -9,13 +9,15 @@ app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({extended:true}));
 
-const apiKey = "ddd46926cf372917be61ce75831a6912";
+let globalVar1 = "";
 
-app.get("/",function(req,res){
-	res.render("index");
+app.get("/weathering-with-you-nodejs-v1",function(req,res){
+	res.render("weathering-with-you-nodejs-v1/index");
 });
 
-app.post("/",function(req,res){
+app.post("/weathering-with-you-nodejs-v1",function(req,res){
+	const apiKey = "ddd46926cf372917be61ce75831a6912";
+
 	https.get("https://api.openweathermap.org/data/2.5/weather?q="+req.body.place+"&appid="+apiKey+"",function(response){
 		response.on("data",function(data){
 			if(JSON.parse(data).cod == 200) {
@@ -32,6 +34,6 @@ app.post("/",function(req,res){
 	});
 });
 
-app.listen(3000,function(){
-	console.log("Server is started on port 3000");
+app.listen(process.env.PORT,function(){
+	console.log("Server is started on port " + process.env.PORT);
 });
