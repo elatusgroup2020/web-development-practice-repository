@@ -1,13 +1,20 @@
 <%- include("partials/head"); -%>
+		<img id="loading-result" src="images/loading.gif">
 		<h1>Account Information</h1>
 		<br>
 		<input id="account" type="text" placeholder="account">
+		<br><br>
 		<input id="username" type="text" placeholder="username">
+		<br><br>
 		<input id="password" type="password" placeholder="password">
+		<br>
 		<input id="show-password" type="checkbox" value="unchecked">
+		<label>show</label>
+		<br><br>
 		<input id="code" type="password" placeholder="code">
 		<br><br>
 		<button id="retrieve" type="button">Retrieve</button>
-		<button type="button">Save</button>
-		<button type="button">Update</button>
+		<button id="save" type="button">Save</button>
+		<button id="update" type="button">Update</button>
+		<button id="delete" type="button">Delete</button>
 <%- include("partials/foot"); -%>
