@@ -29,7 +29,7 @@ $("#retrieve").on("click",function(){
 		if(data.status === "no data") {
 			alert("No data found.");
 		} else if(data.status === "many data") {
-			alert("Please specify from the list of retrieved data :\n" + data.account);
+			alert("Please specify in ACCOUNT field any value from the list of retrieved data :\n" + data.account);
 		} else {
 			$("#account").val(data.account);
 			$("#username").val(data.username);
@@ -47,13 +47,13 @@ $("#retrieve").on("click",function(){
 });
 
 $("#save").on("click",function(){
-	$("#loading-result").css("visibility", "visible");
-	$("input").attr("disabled","disabled");
-	$("button").attr("disabled","disabled");
-	
 	if($("#account").val() === "" || $("#username").val() === "" || $("#password").val() === "") {
-		alert("Need to fill up all the fields.");
+		alert("Need to fill up ALL the fields.");
 	} else {
+		$("#loading-result").css("visibility", "visible");
+		$("input").attr("disabled","disabled");
+		$("button").attr("disabled","disabled");
+		
 		jqxhr = $.post( 
 			"/accounts-manager-save", 
 			{
@@ -92,13 +92,13 @@ $("#save").on("click",function(){
 });
 
 $("#update").on("click",function(){
-	$("#loading-result").css("visibility", "visible");
-	$("input").attr("disabled","disabled");
-	$("button").attr("disabled","disabled");
-	
 	if($("#account").val() === "" || ($("#username").val() === "" && $("#password").val() === "")) {
-		alert("Need to fill up the Account field.\nNeed to fill up atleast one of Username and Password fields.");
+		alert("Need to fill up the ACCOUNT field.\nNeed to fill up atleast one of USERNAME and PASSWORD fields.");
 	} else {
+		$("#loading-result").css("visibility", "visible");
+		$("input").attr("disabled","disabled");
+		$("button").attr("disabled","disabled");
+		
 		jqxhr = $.post( 
 			"/accounts-manager-update", 
 			{
@@ -137,13 +137,13 @@ $("#update").on("click",function(){
 });
 
 $("#delete").on("click",function(){
-	$("#loading-result").css("visibility", "visible");
-	$("input").attr("disabled","disabled");
-	$("button").attr("disabled","disabled");
-	
 	if($("#account").val() === "") {
-		alert("Need to fill up the Account field.");
+		alert("Need to fill up the ACCOUNT field.");
 	} else {
+		$("#loading-result").css("visibility", "visible");
+		$("input").attr("disabled","disabled");
+		$("button").attr("disabled","disabled");
+		
 		jqxhr = $.post( "/accounts-manager-delete", {account:$("#account").val()} );
 		
 		$("#account").val("");
