@@ -1,8 +1,10 @@
+require('dotenv').config();
 const express = require("express");
 const ejs = require("ejs");
 const bodyParser = require("body-parser");
 const https = require("https");
 const mongoose = require("mongoose");
+const encrypt = require('mongoose-encryption');
 
 const app = express();
 
@@ -24,6 +26,8 @@ app.post("/accounts-manager-retrieve",function(req,res){
 		username : String,
 		password : String
 	});
+	
+	accountSchema.plugin(encrypt, { encryptionKey: process.env.ENCRYPTION_KEY, signingKey: process.env.SIGNING_KEY, excludeFromEncryption: ['account'],  additionalAuthenticatedFields: ['account'] });
 
 	const Account = mongoose.model("Account", accountSchema);
 	
@@ -65,6 +69,8 @@ app.post("/accounts-manager-save",function(req,res){
 		username : String,
 		password : String
 	});
+	
+	accountSchema.plugin(encrypt, { encryptionKey: process.env.ENCRYPTION_KEY, signingKey: process.env.SIGNING_KEY, excludeFromEncryption: ['account'],  additionalAuthenticatedFields: ['account'] });
 
 	const Account = mongoose.model("Account", accountSchema);
 	
@@ -118,7 +124,9 @@ app.post("/accounts-manager-update",function(req,res){
 		username : String,
 		password : String
 	});
-
+	
+	accountSchema.plugin(encrypt, { encryptionKey: process.env.ENCRYPTION_KEY, signingKey: process.env.SIGNING_KEY, excludeFromEncryption: ['account'],  additionalAuthenticatedFields: ['account'] });
+	
 	const Account = mongoose.model("Account", accountSchema);
 	
 	Account.find({account:req.body.account},function(err,accounts){
@@ -173,7 +181,9 @@ app.post("/accounts-manager-delete",function(req,res){
 		username : String,
 		password : String
 	});
-
+	
+	accountSchema.plugin(encrypt, { encryptionKey: process.env.ENCRYPTION_KEY, signingKey: process.env.SIGNING_KEY, excludeFromEncryption: ['account'],  additionalAuthenticatedFields: ['account'] });
+	
 	const Account = mongoose.model("Account", accountSchema);
 	
 	Account.find({account:req.body.account},function(err,accounts){

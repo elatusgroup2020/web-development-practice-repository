@@ -1,4 +1,9 @@
 let jqxhr;
+let jqxhr1;
+let account;
+let username;
+let password;
+let code;
 
 $("#loading-result").css("visibility", "hidden");
 
@@ -11,43 +16,49 @@ $("#show-password").on("click",function(){
 });
 
 $("#retrieve").on("click",function(){
-	$("#loading-result").css("visibility", "visible");
-	$("input").attr("disabled","disabled");
-	$("button").attr("disabled","disabled");
-	
-	jqxhr = $.post( "/accounts-manager-retrieve", {keyword:$("#account").val()} );
-	
-	$("#account").val("");
-	$("#username").val("");
-	$("#password").val("");
-	
-	jqxhr.done(function(data){
-		$("#loading-result").css("visibility", "hidden");
-		$("input").removeAttr("disabled");
-		$("button").removeAttr("disabled");
+	if($("#code").val() === "") {
+		alert("Need to fill up CODE field.");
+	} else {
+		$("#loading-result").css("visibility", "visible");
+		$("input").attr("disabled","disabled");
+		$("button").attr("disabled","disabled");
 		
-		if(data.status === "no data") {
-			alert("No data found.");
-		} else if(data.status === "many data") {
-			alert("Please specify in ACCOUNT field any value from the list of retrieved data :\n" + data.account);
-		} else {
-			$("#account").val(data.account);
-			$("#username").val(data.username);
-			$("#password").val(data.password);
-		}
-	});
-	
-	jqxhr.fail(function(){
-		$("#loading-result").css("visibility", "hidden");
-		$("input").removeAttr("disabled");
-		$("button").removeAttr("disabled");
+		jqxhr = $.post( "/accounts-manager-retrieve", {keyword:$("#account").val()} );
 		
-		alert("Cannot retrieve data from server as of the moment.");
-	});
+		$("#account").val("");
+		$("#username").val("");
+		$("#password").val("");
+		code = $("#code").val();
+		$("#code").val("");
+		
+		jqxhr.done(function(data){
+			$("#loading-result").css("visibility", "hidden");
+			$("input").removeAttr("disabled");
+			$("button").removeAttr("disabled");
+			
+			if(data.status === "no data") {
+				alert("No data found.");
+			} else if(data.status === "many data") {
+				alert("Please specify in ACCOUNT field any value from the list of retrieved data :\n" + data.account);
+			} else {
+				$("#account").val(data.account);
+				$("#username").val(CryptoJS.AES.decrypt(data.username,code).toString(CryptoJS.enc.Utf8));
+				$("#password").val(CryptoJS.AES.decrypt(data.password,code).toString(CryptoJS.enc.Utf8));
+			}
+		});
+		
+		jqxhr.fail(function(){
+			$("#loading-result").css("visibility", "hidden");
+			$("input").removeAttr("disabled");
+			$("button").removeAttr("disabled");
+			
+			alert("Cannot retrieve data from server as of the moment.");
+		});
+	}
 });
 
 $("#save").on("click",function(){
-	if($("#account").val() === "" || $("#username").val() === "" || $("#password").val() === "") {
+	if($("#account").val() === "" || $("#username").val() === "" || $("#password").val() === "" || $("#code").val() === "") {
 		alert("Need to fill up ALL the fields.");
 	} else {
 		$("#loading-result").css("visibility", "visible");
@@ -58,14 +69,15 @@ $("#save").on("click",function(){
 			"/accounts-manager-save", 
 			{
 				account : $("#account").val(),
-				username : $("#username").val(),
-				password : $("#password").val()
+				username : CryptoJS.AES.encrypt($("#username").val(),$("#code").val()).toString(),
+				password : CryptoJS.AES.encrypt($("#password").val(),$("#code").val()).toString()
 			}
 		);
 		
 		$("#account").val("");
 		$("#username").val("");
 		$("#password").val("");
+		$("#code").val("");
 		
 		jqxhr.done(function(data){
 			$("#loading-result").css("visibility", "hidden");
@@ -92,37 +104,66 @@ $("#save").on("click",function(){
 });
 
 $("#update").on("click",function(){
-	if($("#account").val() === "" || ($("#username").val() === "" && $("#password").val() === "")) {
-		alert("Need to fill up the ACCOUNT field.\nNeed to fill up atleast one of USERNAME and PASSWORD fields.");
+	if($("#account").val() === "" || ($("#username").val() === "" && $("#password").val() === "") || $("#code").val() === "") {
+		alert("Need to fill up ACCOUNT field.\nNeed to fill up atleast one of USERNAME and PASSWORD fields.\nNeed to fill up CODE field");
 	} else {
 		$("#loading-result").css("visibility", "visible");
 		$("input").attr("disabled","disabled");
 		$("button").attr("disabled","disabled");
 		
-		jqxhr = $.post( 
-			"/accounts-manager-update", 
-			{
-				account : $("#account").val(),
-				username : $("#username").val(),
-				password : $("#password").val()
-			}
-		);
+		jqxhr = $.post( "/accounts-manager-retrieve", {keyword:$("#account").val()} );
 		
+		account = $("#account").val();
 		$("#account").val("");
+		username = $("#username").val();
 		$("#username").val("");
+		password = $("#password").val();
 		$("#password").val("");
+		code = $("#code").val();
+		$("#code").val("");
 		
 		jqxhr.done(function(data){
-			$("#loading-result").css("visibility", "hidden");
-			$("input").removeAttr("disabled");
-			$("button").removeAttr("disabled");
-			
-			if(data.status === "error") {
-				alert("Data not updated.");
-			} else if(data.status === "no data") {
-				alert("Data does not exist.");
+			if((username === "" || password === "") && (CryptoJS.AES.decrypt(data.username,code).toString(CryptoJS.enc.Utf8) === "" || CryptoJS.AES.decrypt(data.password,code).toString(CryptoJS.enc.Utf8) === "")) {
+				$("#loading-result").css("visibility", "hidden");
+				$("input").removeAttr("disabled");
+				$("button").removeAttr("disabled");
+				
+				$("#account").val(account);
+				$("#username").val(username);
+				$("#password").val(password);
+				
+				alert("Code for USERNAME and PASSWORD did not match.");
 			} else {
-				alert("Data updated.");
+				jqxhr1 = $.post( 
+					"/accounts-manager-update", 
+					{
+						account : account,
+						username : ((username != "") ? CryptoJS.AES.encrypt(username,code).toString() : ""),
+						password : ((password != "") ? CryptoJS.AES.encrypt(password,code).toString() : ""),
+					}
+				);
+				
+				jqxhr1.done(function(data1){
+					$("#loading-result").css("visibility", "hidden");
+					$("input").removeAttr("disabled");
+					$("button").removeAttr("disabled");
+					
+					if(data1.status === "error") {
+						alert("Data not updated.");
+					} else if(data1.status === "no data") {
+						alert("Data does not exist.");
+					} else {
+						alert("Data updated.");
+					}
+				});
+
+				jqxhr1.fail(function(){
+					$("#loading-result").css("visibility", "hidden");
+					$("input").removeAttr("disabled");
+					$("button").removeAttr("disabled");
+					
+					alert("Cannot update data of server as of the moment.");
+				});
 			}
 		});
 		
@@ -137,8 +178,10 @@ $("#update").on("click",function(){
 });
 
 $("#delete").on("click",function(){
-	if($("#account").val() === "") {
-		alert("Need to fill up the ACCOUNT field.");
+	if($("#account").val() === "" || $("#username").val() === "" || $("#password").val() === "" || $("#code").val() === "") {
+		alert("Need to fill up ALL the fields.");
+	} else if($("#account").val() != $("#username").val() || $("#account").val() != $("#password").val() || $("#account").val() != $("#code").val()) {
+		alert("ALL the fields should have the same value.");
 	} else {
 		$("#loading-result").css("visibility", "visible");
 		$("input").attr("disabled","disabled");
@@ -149,6 +192,7 @@ $("#delete").on("click",function(){
 		$("#account").val("");
 		$("#username").val("");
 		$("#password").val("");
+		$("#code").val("");
 		
 		jqxhr.done(function(data){
 			$("#loading-result").css("visibility", "hidden");
