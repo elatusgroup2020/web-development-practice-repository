@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+	<head>
+		<meta charset="utf-8">
+		<title> Daily Time Breakdown </title>
+	</head>
+	<body>
+		<button id=new>NEW</button>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> 
+		<script>
+			let timers = [];
+			
+			$("#new").on("click",function(){
+				timers.push({
+					id : 0,
+					name : 0,
+					time : 0,
+					status : 0
+				});
+				timers[timers.length-1].id = timers.length;
+				timers[timers.length-1].name = "Timer"+timers[timers.length-1].id;
+				$("body").append(
+					$("<div id="+timers[timers.length-1].id+"></div>").append(
+						$("<span class=timerName>"+timers[timers.length-1].name+" :</span>"),
+						$("<span class=timerTime>0</span>"),
+						$("<button> start </button>").on("click",function(){
+							timers[$(this).parent().attr("id")-1].status = 1;
+						}),
+						$("<button> stop </button>").on("click",function(){
+							timers[$(this).parent().attr("id")-1].status = 0;
+						})
+					)
+				);
+			});
+			
+			setInterval(function(){
+				for(let ctr=0;ctr<timers.length;ctr++){
+					if(timers[ctr].status != 0){
+						timers[ctr].time++;
+					}
+					$("#"+(ctr+1)+" .timerTime").text(timers[ctr].time);
+				}
+			}, 1000);
+		</script>
+	</body>
+</html>
